@@ -9,6 +9,7 @@
       "imageAlt": "BetterTopBar in a match",
       "disclosure": "Made with AI. The code, the docs and this text were written mostly by an AI coding agent (Anthropic's Claude, in Claude Code). gfkm sets the direction, reviews the work and tests every release in the game.",
       "knownIssues": [
+        "This is a debug build of the 1.0.0 code: the game console shows extra [BetterTopBar] lines. A clean build follows.",
         "Hero Health Percent may not show: in testing the percent was computed but the labels did not appear. Under investigation.",
         "Designed to run alongside BetterMap and Map Event Reminders, but not yet tested together in a match.",
         "Rift and Soul Urn times are estimates (marked ~) until the game publishes them."
@@ -16,7 +17,21 @@
       "links": {
         "source": "https://github.com/gfkm/BetterTopBar"
       },
-      "releases": []
+      "releases": [
+        {
+          "version": "1.0.0-debug",
+          "date": "2026-11-11",
+          "tag": "bettertopbar-v1.0.0-debug",
+          "assets": [
+            {
+              "file": "bettertopbar-v1.0.0-debug.vpk",
+              "label": null,
+              "size": 348823,
+              "sha256": "9e8169c801b0265e3f1e1be17d5e3674cd7adc76f9dc44e6c4affa50cf068525"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "bettermap",
@@ -25,9 +40,25 @@
       "image": null,
       "imageAlt": "BetterMap on the minimap",
       "disclosure": "Made with AI. The code, the docs and this text were written mostly by an AI coding agent (Anthropic's Claude, in Claude Code). gfkm sets the direction, reviews the work and tests every release in the game.",
-      "knownIssues": [],
+      "knownIssues": [
+        "Version 3.6 includes the new camp icons; 3.6.1, which moves them into BetterMap Camp Icons, follows."
+      ],
       "links": {},
-      "releases": []
+      "releases": [
+        {
+          "version": "3.6",
+          "date": "2026-11-11",
+          "tag": "bettermap-v3.6",
+          "assets": [
+            {
+              "file": "bettermap-v3.6.vpk",
+              "label": null,
+              "size": 978499,
+              "sha256": "99f25ba4a34f1e485460536aff3c45768fb10e4adb83bd6f8268b4da90570859"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "bettermap-camp-icons",
@@ -45,7 +76,27 @@
         "label": "Classic and Slot Machine",
         "date": "2026-11-10"
       },
-      "releases": []
+      "releases": [
+        {
+          "version": "1.1.0",
+          "date": "2026-11-11",
+          "tag": "bettermap-camp-icons-v1.1.0",
+          "assets": [
+            {
+              "file": "bettermap-camp-icons-v1.1.0-classic.vpk",
+              "label": "Classic",
+              "size": 25145,
+              "sha256": "d558a2401a539740dc8fc3958be00dece2467624a71c40880555f7608a7ff03f"
+            },
+            {
+              "file": "bettermap-camp-icons-v1.1.0-slot-machine.vpk",
+              "label": "Slot Machine",
+              "size": 25209,
+              "sha256": "226614800502d800b0a356591fcc79a519c660e83f7db19db27322ea11b3d3a5"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
