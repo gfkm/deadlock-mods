@@ -213,11 +213,14 @@
         return;
     }
 
-    // The section keeps its heading; only the loading line is replaced.
+    // The section keeps its heading. What sits between the heading and the end - the loading line, or the
+    // cards tools/prerender.mjs wrote for crawlers - is replaced by the live render (live counts, hover flame).
     function boot() {
         var host = document.getElementById("mods");
-        var loading = host.querySelector(".loading");
-        function clear() { if (loading && loading.parentNode) loading.parentNode.removeChild(loading); }
+        function clear() {
+            var old = host.querySelectorAll(".loading, .cards");
+            for (var i = 0; i < old.length; i++) old[i].parentNode.removeChild(old[i]);
+        }
         function json(url) {
             return fetch(url, { cache: "no-cache" }).then(function (res) {
                 if (!res.ok) throw new Error("HTTP " + res.status);
