@@ -1,5 +1,6 @@
 "use strict";
-// Renders one card per mod from data/mods.json (same origin; no GitHub API calls).
+// Renders one card per mod from data/mods.json, with download counts from data/stats.json when present
+// (both same origin; the counts are collected by tools/stats.mjs in the Pages workflow, not here).
 // Text from the data is always set with textContent, never parsed as HTML.
 // Also loaded by node for the tests (module.exports at the bottom).
 
@@ -31,6 +32,20 @@
         return Math.max(1, Math.round(bytes / 1024)) + " KB";
     }
 
+    // Counts: exact below 10,000, then whole thousands ("27K"); "+" when a part is a recorded figure, not live.
+    function formatCount(n, approx) {
+        var s = n >= 10000 ? Math.floor(n / 1000) + "K" : String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return s + (approx ? "+" : "");
+    }
+
+    function downloads(stats, id) {
+        var s = stats && stats.mods && stats.mods[id];
+        if (!s) return null;
+        var gb = s.gamebanana;
+        return { github: s.github || 0, gamebanana: gb ? gb.count : 0, recorded: !!(gb && gb.source === "recorded"),
+                 asOf: gb && gb.asOf, total: (s.github || 0) + (gb ? gb.count : 0), hasGamebanana: !!gb };
+    }
+
     function make(doc, tag, cls, txt) {
         var e = doc.createElement(tag);
         if (cls) e.className = cls;
@@ -45,8 +60,8 @@
         return a;
     }
 
-    // The hero-select PLAY button (#ConfirmButton): the green flame video behind, the box, and the label split
-    // into one element per letter (Valve's SplitLabel) so the hover can move each letter. The flame only plays
+    // The hero-select PLAY button (#ConfirmButton): the green flame video behind, the box, and the label as one
+    // element per letter (Valve's SplitLabel), each drawn from the oracle outline masks. The flame only plays
     // while the pointer or focus is on the button. A small caption carries the variant, type and size.
     var FLAME = "assets/game/play_btn_grn_flame.webm";
 
@@ -78,7 +93,7 @@
         return btn;
     }
 
-    function card(doc, repo, mod) {
+    function card(doc, repo, mod, stats) {
         var art = make(doc, "article", "card");
         art.setAttribute("id", mod.id);
 
@@ -103,6 +118,17 @@
         var meta = r ? "v" + r.version + " · " + r.date
             : mod.hosted ? mod.hosted.label + " · " + mod.hosted.date : null;
         if (meta) body.appendChild(make(doc, "p", "meta", meta));
+
+        var d = downloads(stats, mod.id);
+        if (d) {
+            var line = body.appendChild(make(doc, "p", "downloads"));
+            line.appendChild(make(doc, "span", "count", formatCount(d.total, d.recorded)));
+            line.appendChild(make(doc, "span", "unit", d.total === 1 ? " download" : " downloads"));
+            if (d.hasGamebanana) {
+                body.appendChild(make(doc, "p", "sources", formatCount(d.gamebanana, d.recorded) + " on GameBanana"
+                    + (d.recorded && d.asOf ? " (as of " + d.asOf + ")" : "") + " · " + formatCount(d.github) + " here"));
+            }
+        }
         body.appendChild(make(doc, "p", "summary", mod.summary));
 
         var actions = body.appendChild(make(doc, "div", "actions"));
@@ -162,14 +188,28 @@
         return art;
     }
 
-    function renderMods(data, doc) {
+    function renderMods(data, doc, stats) {
         var list = make(doc, "div", "cards");
-        for (var i = 0; i < data.mods.length; i++) list.appendChild(card(doc, data.repo, data.mods[i]));
+        for (var i = 0; i < data.mods.length; i++) list.appendChild(card(doc, data.repo, data.mods[i], stats));
         return list;
     }
 
+    // The header total: every mod's downloads, GitHub and GameBanana together.
+    function totalDownloads(data, stats) {
+        var sum = 0, approx = false, any = false;
+        for (var i = 0; i < data.mods.length; i++) {
+            var d = downloads(stats, data.mods[i].id);
+            if (!d) continue;
+            any = true;
+            sum += d.total;
+            approx = approx || d.recorded;
+        }
+        return any ? formatCount(sum, approx) : null;
+    }
+
     if (typeof module !== "undefined" && module.exports) {
-        module.exports = { renderMods: renderMods, downloadUrl: downloadUrl, changelogUrl: changelogUrl };
+        module.exports = { renderMods: renderMods, downloadUrl: downloadUrl, changelogUrl: changelogUrl,
+                           formatCount: formatCount, totalDownloads: totalDownloads };
         return;
     }
 
@@ -178,14 +218,29 @@
         var host = document.getElementById("mods");
         var loading = host.querySelector(".loading");
         function clear() { if (loading && loading.parentNode) loading.parentNode.removeChild(loading); }
-        fetch("data/mods.json", { cache: "no-cache" })
-            .then(function (res) {
+        function json(url) {
+            return fetch(url, { cache: "no-cache" }).then(function (res) {
                 if (!res.ok) throw new Error("HTTP " + res.status);
                 return res.json();
-            })
+            });
+        }
+        // The counts are optional: without them the cards render as before.
+        var stats = json("data/stats.json").catch(function () { return null; });
+        json("data/mods.json")
             .then(function (data) {
+                return stats.then(function (s) { return [data, s]; });
+            })
+            .then(function (both) {
                 clear();
-                host.appendChild(renderMods(data, document));
+                host.appendChild(renderMods(both[0], document, both[1]));
+                var total = totalDownloads(both[0], both[1]);
+                var slot = document.getElementById("total-downloads");
+                if (total && slot) {
+                    slot.textContent = "";
+                    slot.appendChild(make(document, "span", "count", total));
+                    slot.appendChild(make(document, "span", "unit", " downloads"));
+                    slot.hidden = false;
+                }
             })
             .catch(function () {
                 clear();

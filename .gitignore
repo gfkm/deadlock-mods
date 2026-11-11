@@ -3,3 +3,5 @@ dist/
 *.vpk
 __pycache__/
 *.log
+# Collected by tools/stats.mjs in the Pages workflow at deploy time.
+data/stats.json

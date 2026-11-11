@@ -256,6 +256,22 @@ h1 {
 }
 .summary { margin: 0; color: var(--text); }
 
+/* Download counts (data/stats.json): the number in ominousGreen like the version line, the unit muted. */
+.downloads { margin: -4px 0 0; font: 600 15px/1 var(--block); letter-spacing: 0.14em; text-transform: uppercase; }
+.downloads .count { color: var(--ominous); font-size: 22px; letter-spacing: 0.04em; }
+.downloads .unit { color: var(--muted); }
+.sources { margin: -6px 0 0; color: var(--faint); font-size: 13px; }
+
+.total {
+    margin: 26px 0 0;
+    font: 600 16px/1 var(--block);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+.total[hidden] { display: none; }
+.total .count { color: var(--ominous); font-size: 34px; letter-spacing: 0.04em; }
+.total .unit { color: var(--muted); }
+
 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: 4px; }
 /* Each download on its own line; the minor links share the line below. */
 .actions .button { flex: 0 0 100%; }

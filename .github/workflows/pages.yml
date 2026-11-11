@@ -1,0 +1,51 @@
+# Builds and deploys the page. Download counts (data/stats.json) are collected here by tools/stats.mjs,
+# never in the visitor's browser; the schedule keeps them fresh between pushes. If a count cannot be read,
+# the run fails and the last deployed page stays up.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 */3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Collect download counts
+        run: node tools/stats.mjs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Assemble the site
+        run: |
+          mkdir _site
+          cp -r index.html assets data images _site/
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
