@@ -59,11 +59,12 @@
             img.setAttribute("height", "540");
         } else {
             shot.className = "shot shot-empty";
-            shot.appendChild(make(doc, "span", "", "Screenshot coming"));
+            shot.appendChild(make(doc, "span", "shot-title", mod.name));
+            shot.appendChild(make(doc, "span", "shot-note", "Screenshot coming"));
         }
 
         var body = art.appendChild(make(doc, "div", "body"));
-        body.appendChild(make(doc, "h2", "name", mod.name));
+        body.appendChild(make(doc, "h3", "name speckle", mod.name));
 
         var r = latest(mod);
         var meta = r ? "v" + r.version + " · " + r.date
@@ -74,15 +75,21 @@
         var actions = body.appendChild(make(doc, "div", "actions"));
         var dl = downloadUrl(repo, mod);
         if (r) {
+            // Laid out like the main menu's PLAY entry: the big label, and under it a small line where the
+            // menu shows the queue count (here the variant, file type and size).
             for (var k = 0; k < r.assets.length; k++) {
                 var a = r.assets[k];
                 var kind = /\.zip$/.test(a.file) ? ".zip" : ".vpk";
-                var what = "Download " + (a.label ? a.label + " " : "") + kind;
-                actions.appendChild(link(doc, assetUrl(repo, r, a), "button download",
-                    what + " (" + formatSize(a.size) + ")"));
+                var size = formatSize(a.size);
+                var btn = actions.appendChild(link(doc, assetUrl(repo, r, a), "button download"));
+                btn.setAttribute("aria-label", "Download " + (a.label ? a.label + " " : "") + kind + " (" + size + ")");
+                btn.appendChild(make(doc, "span", "menuButtonLabel", "Download"));
+                btn.appendChild(make(doc, "span", "queueNumber", (a.label ? a.label + " · " : "") + kind + " · " + size));
             }
         } else if (dl) {
-            actions.appendChild(link(doc, dl, "button download", "Download on GameBanana"));
+            var gb = actions.appendChild(link(doc, dl, "button download"));
+            gb.appendChild(make(doc, "span", "menuButtonLabel", "Download"));
+            gb.appendChild(make(doc, "span", "queueNumber", "on GameBanana"));
         } else {
             actions.appendChild(make(doc, "span", "pending", "Not released yet"));
         }
@@ -110,19 +117,19 @@
 
         if (mod.knownIssues && mod.knownIssues.length) {
             var issues = body.appendChild(make(doc, "div", "issues"));
-            issues.appendChild(make(doc, "h3", "", "Known issues"));
+            issues.appendChild(make(doc, "h4", "", "Known issues"));
             var ul = issues.appendChild(make(doc, "ul"));
             for (var i = 0; i < mod.knownIssues.length; i++) ul.appendChild(make(doc, "li", "", mod.knownIssues[i]));
         }
 
-        var ai = body.appendChild(make(doc, "p", "disclosure"));
-        ai.appendChild(make(doc, "strong", "", "AI disclosure. "));
-        ai.appendChild(make(doc, "span", "", mod.disclosure));
-
+        // The per-mod AI text stays in the data and the release notes; the page carries one line in the
+        // footer (docs/specs/2026-11-11-showcase-design.md §8). Checksums fold away under one summary.
         if (r) {
+            var sums = body.appendChild(make(doc, "details", "hashes"));
+            sums.appendChild(make(doc, "summary", "", "SHA-256"));
             for (var h = 0; h < r.assets.length; h++) {
                 var f = r.assets[h];
-                body.appendChild(make(doc, "p", "hash", "SHA-256" + (f.label ? " " + f.label : "") + " " + f.sha256));
+                sums.appendChild(make(doc, "p", "hash", (f.label ? f.label + " " : "") + f.sha256));
             }
         }
         return art;
@@ -139,19 +146,22 @@
         return;
     }
 
+    // The section keeps its heading; only the loading line is replaced.
     function boot() {
         var host = document.getElementById("mods");
+        var loading = host.querySelector(".loading");
+        function clear() { if (loading && loading.parentNode) loading.parentNode.removeChild(loading); }
         fetch("data/mods.json", { cache: "no-cache" })
             .then(function (res) {
                 if (!res.ok) throw new Error("HTTP " + res.status);
                 return res.json();
             })
             .then(function (data) {
-                host.textContent = "";
+                clear();
                 host.appendChild(renderMods(data, document));
             })
             .catch(function () {
-                host.textContent = "";
+                clear();
                 var p = host.appendChild(make(document, "p", "error", "The mod list did not load. Every release is on "));
                 p.appendChild(link(document, GITHUB + "gfkm/deadlock-mods/releases", "textlink", "the Releases page"));
                 p.appendChild(document.createTextNode("."));

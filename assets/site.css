@@ -1,145 +1,414 @@
-/* Colours follow Deadlock's HUD (BetterTopBar's research of Valve's sheets): the near-black surfaces, the
-   tooltip brown-black, the cream text of the painted titles, the amber of the clock's low-time pulse.
-   Valve's fonts are not redistributed: system fonts only. */
+/* Built like Deadlock's main menu: Valve's own images (assets/game/, converted by tools/game_assets.py) and
+   colours from citadel_base_styles.css (offWhite #FFEFD7, offBlack #10130D, ritualGreenLight #7CBC1D on the
+   PLAY button, brandGreen #5FE69E, ominousGreen #69E799). Valve's fonts are not redistributed: Gloock stands in
+   for the serif titles, Oswald for the condensed "block" labels (SIL OFL 1.1, assets/fonts/). */
+
+@font-face {
+    font-family: "Gloock";
+    src: url("fonts/gloock-latin.woff2") format("woff2");
+    font-weight: 400;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Oswald";
+    src: url("fonts/oswald-latin.woff2") format("woff2");
+    font-weight: 200 700;
+    font-display: swap;
+}
+
 :root {
-    --bg: #0b0d0d;
-    --surface: #181716;
-    --surface-2: #211f1d;
-    --line: rgba(255, 255, 255, 0.08);
-    --text: #efe6d2;
-    --muted: #a8a093;
-    --accent: #ebc934;
-    --accent-ink: #1b1607;
-    --warn: #ff8a5c;
-    --radius: 8px;
+    --off-white: #ffefd7;
+    --off-black: #10130d;
+    --play: #7cbc1d;
+    --brand-green: #5fe69e;
+    --ominous: #69e799;
+    --warn: #ff5656;
+    --gold: #ffed79;
+    --text: rgba(255, 239, 215, 0.86);
+    --muted: rgba(255, 239, 215, 0.55);
+    --faint: rgba(255, 239, 215, 0.3);
+    --rule: rgba(255, 239, 215, 0.12);
     --gutter: 16px;
+    --title: "Gloock", "Bodoni MT", Didot, Georgia, serif;
+    --block: "Oswald", "Bahnschrift", "Arial Narrow", "Segoe UI", sans-serif;
     color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
-
 html { -webkit-text-size-adjust: 100%; }
 
 body {
     margin: 0;
-    background: var(--bg);
+    min-height: 100vh;
     color: var(--text);
-    font: 16px/1.55 system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font: 16px/1.6 system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #000;
+    background-image:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.62) 55%, rgba(0, 0, 0, 0.8) 100%),
+        linear-gradient(rgba(101, 123, 123, 0.28), rgba(101, 123, 123, 0.28)),
+        url("game/city_bw.webp");
+    background-size: auto, auto, cover;
+    background-position: center, center, center top;
+    background-attachment: fixed;
 }
 
-a { color: var(--accent); }
-a:focus-visible, .button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+/* Film grain over everything, as the menu lays grain_png over its scenes. */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: url("game/grain.webp") repeat;
+    background-size: 324px auto;
+    opacity: 0.16;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 10;
+}
+
+a { color: var(--off-white); text-underline-offset: 3px; }
+a:hover { color: var(--brand-green); }
+a:focus-visible, .button:focus-visible, summary:focus-visible { outline: 2px solid var(--brand-green); outline-offset: 3px; }
 
 code {
-    font: 0.9em ui-monospace, "Cascadia Mono", Consolas, monospace;
-    background: var(--surface-2);
-    padding: 0.1em 0.35em;
-    border-radius: 4px;
+    font: 0.86em ui-monospace, "Cascadia Mono", Consolas, monospace;
+    color: var(--off-white);
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.1em 0.4em;
 }
 
-.wrap { max-width: 1120px; margin: 0 auto; padding: 0 var(--gutter); }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 var(--gutter); }
+
+/* Valve's text_speckle_mask: titles look printed on rough paper. */
+.speckle {
+    -webkit-mask-image: url("game/speckle_mask.png");
+    mask-image: url("game/speckle_mask.png");
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+/* ---- Header: the gothic city painting, the skyline in front ------------------------------------------------ */
 
 .top {
-    padding: 56px 0 32px;
-    background: linear-gradient(180deg, #151312 0%, var(--bg) 100%);
-    border-bottom: 1px solid var(--line);
+    position: relative;
+    padding: 96px 0 150px;
+    background-image:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.1) 40%, rgba(0, 0, 0, 0.85) 100%),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.35) 60%, rgba(0, 0, 0, 0.1) 100%),
+        url("game/gothic.webp");
+    background-size: cover;
+    background-position: center 35%;
 }
-.kicker {
-    margin: 0 0 8px;
-    color: var(--accent);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+.top::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 120px;
+    background: url("game/skyline.webp") repeat-x;
+    background-size: auto 100%;
+    background-position: center bottom;
+    filter: brightness(0);
+    pointer-events: none;
 }
-h1 {
-    margin: 0 0 12px;
-    font-size: clamp(32px, 6vw, 56px);
-    line-height: 1.05;
-    font-weight: 900;
-    letter-spacing: -0.01em;
-    text-transform: uppercase;
-}
-.lead { margin: 0; max-width: 62ch; color: var(--muted); }
 
-#mods { padding: 32px 0 8px; }
+.kicker {
+    margin: 0 0 10px;
+    color: var(--ominous);
+    font: 600 15px/1 var(--block);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+}
+
+h1 {
+    margin: 0;
+    max-width: 12ch;
+    font: 400 clamp(52px, 10vw, 112px)/0.92 var(--title);
+    text-transform: uppercase;
+    color: var(--off-white);
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+}
+
+.lead {
+    margin: 22px 0 0;
+    max-width: 44ch;
+    color: var(--muted);
+    font: 500 17px/1.5 var(--block);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* ---- Section heads, as the dashboard's page titles -------------------------------------------------------- */
+
+.section-title {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin: 0 0 22px;
+    color: var(--off-white);
+    font: 400 40px/1 var(--title);
+    text-transform: uppercase;
+}
+.section-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--rule), transparent);
+}
+
+/* ---- Cards: dark paper cut by Valve's wash_rectangle edge ------------------------------------------------ */
+
+#mods { position: relative; padding: 8px 0 12px; }
 .loading, .error { color: var(--muted); }
 
 .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));
+    gap: 30px;
+    align-items: start;
 }
 
 .card {
+    position: relative;
+    isolation: isolate;
     display: flex;
     flex-direction: column;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.6));
+    transition: transform 160ms ease-out;
+}
+/* The plate sits behind the content, so the mask's specks never cut through the text. */
+.card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: #161811;
+    background-image: linear-gradient(180deg, rgba(255, 239, 215, 0.05), rgba(0, 0, 0, 0.3)), url("game/paper_dark.webp");
+    background-size: auto, 512px;
+    -webkit-mask-box-image: url("game/plate_mask.png") 70 / 34px stretch;
+    mask-border: url("game/plate_mask.png") 70 fill / 34px stretch;
+}
+.card:hover { transform: translateY(-4px); }
+
+.shot {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    margin: 14px 14px 0;
+    background: #000;
     overflow: hidden;
-    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+}
+.shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.shot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.75);
+    pointer-events: none;
 }
 
-.shot { aspect-ratio: 16 / 9; background: #000; }
-.shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* Without a screenshot: the city painting, darkened, with the mod's name on it. */
 .shot-empty {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--muted);
-    font-size: 14px;
-    background: repeating-linear-gradient(135deg, #141312 0 12px, #181716 12px 24px);
+    padding: 20px;
+    background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.8)), url("game/city_bw.webp");
+    background-size: cover;
+    background-position: center 30%;
+}
+.shot-empty .shot-title {
+    position: relative;
+    z-index: 1;
+    font: 400 clamp(28px, 4vw, 38px)/1 var(--title);
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--off-white);
+}
+.shot-empty .shot-note {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 12px;
+    z-index: 1;
+    text-align: center;
+    color: var(--faint);
+    font: 500 12px/1 var(--block);
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
 }
 
-.body { display: flex; flex-direction: column; gap: 10px; padding: 18px 18px 20px; flex: 1; }
-.name { margin: 0; font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; }
-.meta { margin: -6px 0 0; color: var(--accent); font-size: 14px; font-weight: 600; }
+.body { display: flex; flex-direction: column; gap: 12px; padding: 18px 22px 30px; }
+
+.name {
+    margin: 0;
+    color: var(--off-white);
+    font: 400 30px/1.05 var(--title);
+    text-transform: uppercase;
+}
+.meta {
+    margin: -2px 0 0;
+    color: var(--ominous);
+    font: 600 15px/1 var(--block);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
 .summary { margin: 0; color: var(--text); }
 
-.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 4px; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: 4px; }
+/* Each download on its own line, as the menu stacks its entries; the minor links share the line below. */
+.actions .button { flex: 0 0 100%; }
+
+/* Download: the main menu's PLAY entry (dashboard.css .nav_menu_item.primary). No plate: the label alone in
+   the menu serif, bold, offWhite #FFEFD7, 0.5px tracking; hover turns it ritualGreenLight #7CBC1D (0.1s), a press
+   brandGreen #5FE69E at 95% scale. The small line under it is the menu's queueNumber: sans, bold, uppercase,
+   ritualGreen #65951D, pulled up 10px. */
 .button {
-    display: inline-block;
-    padding: 9px 16px;
-    border-radius: 6px;
-    background: var(--accent);
-    color: var(--accent-ink);
-    font-weight: 800;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 100%;
+    color: #ffefd7;
     text-decoration: none;
 }
-.button:hover { filter: brightness(1.08); }
-.textlink { font-weight: 600; }
+.button .menuButtonLabel {
+    padding: 2px 0;
+    font: 400 44px/1.1 var(--title);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: color 0.08s, transform 0.08s;
+}
+.button .queueNumber {
+    margin-top: -6px;
+    color: #65951d;
+    font: 700 16px/1.2 system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+    text-transform: uppercase;
+}
+.button:hover { color: #ffefd7; }
+.button:hover .menuButtonLabel { color: #7cbc1d; transition-duration: 0.1s; }
+.button:active .menuButtonLabel { color: #5fe69e; transform: scale(0.95); }
+.button:focus-visible { outline-offset: 6px; }
+
+/* Changelog, GameBanana: the menu's InputButton (citadel_base_styles.css). A faint brush-stroke outline
+   (button_border, offWhite at 15%) and a speckled label; on hover the outline fades and the stroke fills
+   (button_border_fill at 50%, revealed left to right as Valve's threshold mask paints it in). */
+.textlink {
+    position: relative;
+    isolation: isolate;
+    display: inline-block;
+    padding: 12px 24px 11px;
+    color: rgba(255, 239, 215, 0.67);
+    font: 700 15px/1 var(--block);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-shadow: 0 0 12px rgba(0, 0, 0, 0.75);
+    transition: color 0.2s;
+}
+.textlink::before,
+.textlink::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-style: solid;
+    border-color: transparent;
+    border-width: 0 22px;
+    pointer-events: none;
+}
+.textlink::before {
+    border-image: url("game/button_border.webp") 0 84 fill / 0 22px stretch;
+    opacity: 0.15;
+    transition: opacity 0.2s;
+}
+.textlink::after {
+    border-image: url("game/button_border_fill.webp") 0 84 fill / 0 22px stretch;
+    opacity: 0.5;
+    -webkit-mask: linear-gradient(90deg, #000 45%, transparent 55%) 100% 0 / 220% 100% no-repeat;
+    mask: linear-gradient(90deg, #000 45%, transparent 55%) 100% 0 / 220% 100% no-repeat;
+    transition: -webkit-mask-position 0.3s, mask-position 0.3s;
+}
+.textlink:hover { color: var(--off-white); }
+.textlink:hover::before { opacity: 0; transition-duration: 0.3s; }
+.textlink:hover::after { -webkit-mask-position: 0 0; mask-position: 0 0; }
+
 .pending {
-    padding: 8px 14px;
-    border: 1px dashed var(--line);
-    border-radius: 6px;
     color: var(--muted);
-    font-size: 14px;
+    font: 600 15px/1 var(--block);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
 }
 
-.pak { margin: 0; color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
-.pak code { color: var(--text); }
+.pak { margin: 0; color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
+.pak code { color: var(--brand-green); }
 
+/* Known issues on Valve's black speckled text backer. */
 .issues {
-    padding: 10px 12px;
-    border-left: 3px solid var(--warn);
-    background: rgba(255, 138, 92, 0.06);
-    border-radius: 0 6px 6px 0;
+    padding: 16px 20px 18px;
+    background: url("game/text_backer.webp") center / 100% 100% no-repeat;
 }
-.issues h3 { margin: 0 0 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--warn); }
-.issues ul { margin: 0; padding-left: 18px; font-size: 14px; }
+.issues h4 {
+    margin: 0 0 8px;
+    color: var(--warn);
+    font: 600 14px/1 var(--block);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+.issues ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(--text); }
+.issues li + li { margin-top: 4px; }
 
-.disclosure { margin: auto 0 0; padding-top: 8px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
-.disclosure strong { color: var(--text); }
-.hash { margin: 0; color: var(--muted); font: 11px ui-monospace, Consolas, monospace; overflow-wrap: anywhere; }
+.hashes { color: var(--faint); font-size: 12px; }
+.hashes summary {
+    cursor: pointer;
+    font: 600 12px/1.4 var(--block);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+.hashes summary:hover { color: var(--muted); }
+.hash { margin: 6px 0 0; font: 11px/1.4 ui-monospace, Consolas, monospace; overflow-wrap: anywhere; }
 
-.info {
+/* ---- Install ------------------------------------------------------------------------------------------------ */
+
+.install { padding: 56px 0 8px; }
+.steps {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
     gap: 20px;
-    padding: 24px 0 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
 }
-.info h2 { margin: 0 0 6px; font-size: 16px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); }
-.info p { margin: 0; color: var(--muted); }
+.steps li {
+    position: relative;
+    padding: 22px 22px 24px 76px;
+    color: var(--text);
+    background: url("game/text_backer.webp") center / 100% 100% no-repeat;
+    counter-increment: step;
+}
+.steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 24px;
+    top: 12px;
+    color: var(--play);
+    font: 400 46px/1 var(--title);
+}
 
-.foot { padding-top: 24px; padding-bottom: 40px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); margin-top: 24px; }
+/* ---- Footer ------------------------------------------------------------------------------------------------- */
+
+.foot {
+    margin-top: 56px;
+    padding: 24px var(--gutter) 44px;
+    color: var(--faint);
+    font: 500 13px/1.6 var(--block);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.foot p { margin: 4px 0; }
+.foot a { color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+    .card, .button { transition: none; }
+    .card:hover { transform: none; }
+}
