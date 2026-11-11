@@ -7,3 +7,7 @@ channel; the PLAY button outline stripped to its path) by tools/game_assets.py.
 
 play_btn_grn_flame.webm is the hero-select PLAY button's flame, copied unchanged from the game
 install (game/citadel/panorama/videos/pick_screen/).
+
+oracle_*.svg are outlines of single letters from Valve's VALVE Oracle SemiBold (and Italic), taken
+from the game install's panorama/fonts; the font's licence permits its use for fan art. The font file
+itself is not distributed. oracle.css is generated with them.

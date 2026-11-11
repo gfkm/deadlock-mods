@@ -63,7 +63,9 @@
         fx.setAttribute("aria-hidden", "true");
         var label = box.appendChild(make(doc, "span", "SplitLabel"));
         var word = "Download";
-        for (var i = 0; i < word.length; i++) label.appendChild(make(doc, "span", "", word.charAt(i)));
+        for (var i = 0; i < word.length; i++) {
+            label.appendChild(make(doc, "span", "glyph g-" + word.charAt(i).toUpperCase(), word.charAt(i)));
+        }
         btn.appendChild(make(doc, "span", "caption", caption));
         if (btn.addEventListener) {
             var start = function () { fx.muted = true; var p = fx.play(); if (p && p.catch) p.catch(function () {}); };

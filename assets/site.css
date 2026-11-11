@@ -296,7 +296,7 @@ h1 {
     z-index: 2;
     display: block;
     max-width: 100%;
-    padding: 12px 22px 10px;
+    padding: 10px 20px 8px;
     text-align: center;
 }
 .button .buttonContent::before {
@@ -310,20 +310,40 @@ h1 {
     mask: url("game/play_box.webp") center / 100% 100% no-repeat;
     transition: transform 0.2s, opacity 0.2s, background-color 0.2s;
 }
+/* The label is Valve's oracle face, drawn from per-letter outline masks (assets/game/oracle.css sets each
+   letter's width and mask; the italic set swaps in on hover). The letters stay in the DOM as transparent text. */
 .button .SplitLabel {
-    display: inline-block;
-    padding: 5px 0;
-    font: 400 40px/1 var(--title);
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    --ink: rgba(255, 239, 215, 0.93);
+    display: inline-flex;
+    padding: 4px 0 2px;
+    font-size: 30px;
+    line-height: 1;
     white-space: nowrap;
-    transition: color 0.2s;
 }
-.button .SplitLabel span { display: inline-block; transition: transform 0.2s; }
+.button .SplitLabel .glyph {
+    position: relative;
+    display: inline-block;
+    margin-right: 1px;
+    color: transparent;
+    overflow: visible;
+    transition: transform 0.2s;
+}
+.button .SplitLabel .glyph::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background-color: var(--ink);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    transition: background-color 0.2s;
+}
 .button .caption {
     position: relative;
     z-index: 3;
-    margin: 6px 0 0 22px;
+    margin: 4px 0 0 20px;
     color: var(--muted);
     font: 600 13px/1 var(--block);
     letter-spacing: 0.16em;
@@ -340,13 +360,13 @@ h1 {
     transform: rotate(-3deg);
 }
 .button:hover .SplitLabel,
-.button:focus-visible .SplitLabel { color: var(--off-black); font-style: italic; }
+.button:focus-visible .SplitLabel { --ink: var(--off-black); }
 .button:hover .btn_fx, .button:focus-visible .btn_fx { opacity: 1; }
-.button:hover .SplitLabel span:nth-child(1) { transform: rotate(-10deg); }
-.button:hover .SplitLabel span:first-child { transform: rotate(-10deg); }
-.button:hover .SplitLabel span:nth-child(even) { transform: translateY(-4px); }
-.button:hover .SplitLabel span:nth-child(odd) { transform: translateY(4px); }
-.button:hover .SplitLabel span:last-child { transform: rotate(6deg); }
+.button:hover .SplitLabel .glyph:nth-child(1) { transform: rotate(-10deg); }
+.button:hover .SplitLabel .glyph:first-child { transform: rotate(-10deg); }
+.button:hover .SplitLabel .glyph:nth-child(even) { transform: translateY(-4px); }
+.button:hover .SplitLabel .glyph:nth-child(odd) { transform: translateY(4px); }
+.button:hover .SplitLabel .glyph:last-child { transform: rotate(6deg); }
 .button:focus-visible { outline: none; }
 .button:focus-visible .buttonContent { outline: 2px solid var(--brand-green); outline-offset: 6px; }
 
