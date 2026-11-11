@@ -9,7 +9,6 @@
       "imageAlt": "BetterTopBar in a match",
       "disclosure": "Made with AI. The code, the docs and this text were written mostly by an AI coding agent (Anthropic's Claude, in Claude Code). gfkm sets the direction, reviews the work and tests every release in the game.",
       "knownIssues": [
-        "This is a debug build of the 1.0.0 code: the game console shows extra [BetterTopBar] lines. A clean build follows.",
         "Hero Health Percent may not show: in testing the percent was computed but the labels did not appear. Under investigation.",
         "Designed to run alongside BetterMap and Map Event Reminders, but not yet tested together in a match.",
         "Rift and Soul Urn times are estimates (marked ~) until the game publishes them."
@@ -17,15 +16,17 @@
       "links": {},
       "releases": [
         {
-          "version": "1.0.0-debug",
+          "version": "1.0.0",
           "date": "2026-11-11",
-          "tag": "bettertopbar-v1.0.0-debug",
+          "tag": "bettertopbar-v1.0.0",
           "assets": [
             {
-              "file": "bettertopbar-v1.0.0-debug.vpk",
+              "file": "bettertopbar-v1.0.0.zip",
               "label": null,
-              "size": 348823,
-              "sha256": "9e8169c801b0265e3f1e1be17d5e3674cd7adc76f9dc44e6c4affa50cf068525"
+              "size": 79543,
+              "sha256": "3f008906b59972289e4a86492ab33f7f98bb3e57bcd48a3c4e2a579d9d2c4146",
+              "pak": "pak03_dir.vpk",
+              "vpkSha256": "601c45527a141021c96dbad0bf6d9a2b93554d3438323156b0088a19c03dd1d2"
             }
           ]
         }
@@ -38,21 +39,21 @@
       "image": null,
       "imageAlt": "BetterMap on the minimap",
       "disclosure": "Made with AI. The code, the docs and this text were written mostly by an AI coding agent (Anthropic's Claude, in Claude Code). gfkm sets the direction, reviews the work and tests every release in the game.",
-      "knownIssues": [
-        "Version 3.6 includes the new camp icons; 3.6.1, which moves them into BetterMap Camp Icons, follows."
-      ],
+      "knownIssues": [],
       "links": {},
       "releases": [
         {
-          "version": "3.6",
+          "version": "3.6.1",
           "date": "2026-11-11",
-          "tag": "bettermap-v3.6",
+          "tag": "bettermap-v3.6.1",
           "assets": [
             {
-              "file": "bettermap-v3.6.vpk",
+              "file": "bettermap-v3.6.1.zip",
               "label": null,
-              "size": 978499,
-              "sha256": "99f25ba4a34f1e485460536aff3c45768fb10e4adb83bd6f8268b4da90570859"
+              "size": 194701,
+              "sha256": "36ffba7dcdc2eb672b7282e5fde09b9dd6ac667d49a671ff0f2e197ea40a2d42",
+              "pak": "pak01_dir.vpk",
+              "vpkSha256": "0e288d9f8764beed0b74ac9775e5e11f9f86a1f91ee27a025f108098e533ae82"
             }
           ]
         }
@@ -81,16 +82,20 @@
           "tag": "bettermap-camp-icons-v1.1.0",
           "assets": [
             {
-              "file": "bettermap-camp-icons-v1.1.0-classic.vpk",
+              "file": "bettermap-camp-icons-v1.1.0-classic.zip",
               "label": "Classic",
-              "size": 25145,
-              "sha256": "d558a2401a539740dc8fc3958be00dece2467624a71c40880555f7608a7ff03f"
+              "size": 3069,
+              "sha256": "53089faa0fe4e963f2d4a9c3fbe20796d476a6ed0ea20d465c465230a23b12b5",
+              "pak": "pak02_dir.vpk",
+              "vpkSha256": "d558a2401a539740dc8fc3958be00dece2467624a71c40880555f7608a7ff03f"
             },
             {
-              "file": "bettermap-camp-icons-v1.1.0-slot-machine.vpk",
+              "file": "bettermap-camp-icons-v1.1.0-slot-machine.zip",
               "label": "Slot Machine",
-              "size": 25209,
-              "sha256": "226614800502d800b0a356591fcc79a519c660e83f7db19db27322ea11b3d3a5"
+              "size": 3433,
+              "sha256": "78f145e6d6e37737ea2ed6a7469ee49c9a41fdc5e49df678da5f8818d4ffd174",
+              "pak": "pak02_dir.vpk",
+              "vpkSha256": "226614800502d800b0a356591fcc79a519c660e83f7db19db27322ea11b3d3a5"
             }
           ]
         }

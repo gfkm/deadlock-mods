@@ -76,7 +76,8 @@
         if (r) {
             for (var k = 0; k < r.assets.length; k++) {
                 var a = r.assets[k];
-                var what = a.label ? "Download " + a.label : "Download .vpk";
+                var kind = /\.zip$/.test(a.file) ? ".zip" : ".vpk";
+                var what = "Download " + (a.label ? a.label + " " : "") + kind;
                 actions.appendChild(link(doc, assetUrl(repo, r, a), "button download",
                     what + " (" + formatSize(a.size) + ")"));
             }
@@ -93,6 +94,19 @@
         }
         if (links.source) actions.appendChild(link(doc, links.source, "textlink", "Source"));
         if (links.discord) actions.appendChild(link(doc, links.discord, "textlink", "Discord"));
+
+        // Each archive holds one pakNN_dir.vpk; files that share a name share one line.
+        if (r) {
+            var paks = [];
+            for (var p = 0; p < r.assets.length; p++) {
+                if (r.assets[p].pak && paks.indexOf(r.assets[p].pak) < 0) paks.push(r.assets[p].pak);
+            }
+            if (paks.length) {
+                var pak = body.appendChild(make(doc, "p", "pak", "Unzip into Deadlock/game/citadel/addons: "));
+                pak.appendChild(make(doc, "code", "", paks.join(", ")));
+                pak.appendChild(make(doc, "span", "", ". If another mod already uses that number, rename it to a free one."));
+            }
+        }
 
         if (mod.knownIssues && mod.knownIssues.length) {
             var issues = body.appendChild(make(doc, "div", "issues"));
