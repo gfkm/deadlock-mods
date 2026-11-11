@@ -45,6 +45,37 @@
         return a;
     }
 
+    // The hero-select PLAY button (#ConfirmButton): the green flame video behind, the box, and the label split
+    // into one element per letter (Valve's SplitLabel) so the hover can move each letter. The flame only plays
+    // while the pointer or focus is on the button. A small caption carries the variant, type and size.
+    var FLAME = "assets/game/play_btn_grn_flame.webm";
+
+    function playButton(doc, parent, href, caption) {
+        var btn = parent.appendChild(link(doc, href, "button download"));
+        var box = btn.appendChild(make(doc, "span", "buttonContent"));
+        var fx = box.appendChild(doc.createElement("video"));
+        fx.className = "btn_fx";
+        fx.setAttribute("src", FLAME);
+        fx.setAttribute("muted", "");
+        fx.setAttribute("loop", "");
+        fx.setAttribute("playsinline", "");
+        fx.setAttribute("preload", "none");
+        fx.setAttribute("aria-hidden", "true");
+        var label = box.appendChild(make(doc, "span", "SplitLabel"));
+        var word = "Download";
+        for (var i = 0; i < word.length; i++) label.appendChild(make(doc, "span", "", word.charAt(i)));
+        btn.appendChild(make(doc, "span", "caption", caption));
+        if (btn.addEventListener) {
+            var start = function () { fx.muted = true; var p = fx.play(); if (p && p.catch) p.catch(function () {}); };
+            var stop = function () { fx.pause(); };
+            btn.addEventListener("mouseenter", start);
+            btn.addEventListener("focus", start);
+            btn.addEventListener("mouseleave", stop);
+            btn.addEventListener("blur", stop);
+        }
+        return btn;
+    }
+
     function card(doc, repo, mod) {
         var art = make(doc, "article", "card");
         art.setAttribute("id", mod.id);
@@ -75,21 +106,15 @@
         var actions = body.appendChild(make(doc, "div", "actions"));
         var dl = downloadUrl(repo, mod);
         if (r) {
-            // Laid out like the main menu's PLAY entry: the big label, and under it a small line where the
-            // menu shows the queue count (here the variant, file type and size).
             for (var k = 0; k < r.assets.length; k++) {
                 var a = r.assets[k];
                 var kind = /\.zip$/.test(a.file) ? ".zip" : ".vpk";
                 var size = formatSize(a.size);
-                var btn = actions.appendChild(link(doc, assetUrl(repo, r, a), "button download"));
+                var btn = playButton(doc, actions, assetUrl(repo, r, a), (a.label ? a.label + " · " : "") + kind + " · " + size);
                 btn.setAttribute("aria-label", "Download " + (a.label ? a.label + " " : "") + kind + " (" + size + ")");
-                btn.appendChild(make(doc, "span", "menuButtonLabel", "Download"));
-                btn.appendChild(make(doc, "span", "queueNumber", (a.label ? a.label + " · " : "") + kind + " · " + size));
             }
         } else if (dl) {
-            var gb = actions.appendChild(link(doc, dl, "button download"));
-            gb.appendChild(make(doc, "span", "menuButtonLabel", "Download"));
-            gb.appendChild(make(doc, "span", "queueNumber", "on GameBanana"));
+            playButton(doc, actions, dl, "on GameBanana").setAttribute("aria-label", "Download on GameBanana");
         } else {
             actions.appendChild(make(doc, "span", "pending", "Not released yet"));
         }

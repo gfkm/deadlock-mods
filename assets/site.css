@@ -36,6 +36,8 @@
 
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
+/* The flame behind a hovered Download may reach past a card's edge; it must never widen the page. */
+html, body { overflow-x: hidden; overflow-x: clip; }
 
 body {
     margin: 0;
@@ -255,39 +257,98 @@ h1 {
 .summary { margin: 0; color: var(--text); }
 
 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: 4px; }
-/* Each download on its own line, as the menu stacks its entries; the minor links share the line below. */
+/* Each download on its own line; the minor links share the line below. */
 .actions .button { flex: 0 0 100%; }
 
-/* Download: the main menu's PLAY entry (dashboard.css .nav_menu_item.primary). No plate: the label alone in
-   the menu serif, bold, offWhite #FFEFD7, 0.5px tracking; hover turns it ritualGreenLight #7CBC1D (0.1s), a press
-   brandGreen #5FE69E at 95% scale. The small line under it is the menu's queueNumber: sans, bold, uppercase,
-   ritualGreen #65951D, pulled up 10px. */
+/* Download: the hero-select PLAY button (citadel_popup_roster_select.css #ConfirmButton), rule for rule.
+   At rest: the torn play_box outline washed #93aead at 20 %, the label in the oracle face (serif stand-in),
+   bold, offWhite&ee, 1px tracking. On hover: the outline becomes play_box_fill washed offWhite at full
+   opacity, box and fill turn -3deg (0.2s), the label goes offBlack italic, each SplitLabel letter moves
+   (first -10deg, even -4px, odd +4px, last +6deg, in Valve's order, so later rules win as they do in the
+   game), and the green flame video fades in behind (0.2s). */
 .button {
+    position: relative;
+    isolation: isolate;
     display: inline-flex;
     flex-direction: column;
     align-items: flex-start;
     max-width: 100%;
-    color: #ffefd7;
+    margin: 6px 0 2px;
+    color: rgba(255, 239, 215, 0.93);
     text-decoration: none;
 }
-.button .menuButtonLabel {
-    padding: 2px 0;
-    font: 400 44px/1.1 var(--title);
-    letter-spacing: 0.5px;
+/* Valve's FX panel is 560x180 against a 300px-wide box, nudged 130px right and 30px up. */
+.button .btn_fx {
+    position: absolute;
+    z-index: -2;
+    left: 50%;
+    top: 50%;
+    width: 187%;
+    height: 240%;
+    transform: translate(calc(-50% + 22%), calc(-50% - 18%));
+    object-fit: fill;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+.button .buttonContent {
+    position: relative;
+    z-index: 2;
+    display: block;
+    max-width: 100%;
+    padding: 12px 22px 10px;
+    text-align: center;
+}
+.button .buttonContent::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: #93aead;
+    opacity: 0.2;
+    -webkit-mask: url("game/play_box.webp") center / 100% 100% no-repeat;
+    mask: url("game/play_box.webp") center / 100% 100% no-repeat;
+    transition: transform 0.2s, opacity 0.2s, background-color 0.2s;
+}
+.button .SplitLabel {
+    display: inline-block;
+    padding: 5px 0;
+    font: 400 40px/1 var(--title);
+    letter-spacing: 1px;
     text-transform: uppercase;
     white-space: nowrap;
-    transition: color 0.08s, transform 0.08s;
+    transition: color 0.2s;
 }
-.button .queueNumber {
-    margin-top: -6px;
-    color: #65951d;
-    font: 700 16px/1.2 system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+.button .SplitLabel span { display: inline-block; transition: transform 0.2s; }
+.button .caption {
+    position: relative;
+    z-index: 3;
+    margin: 6px 0 0 22px;
+    color: var(--muted);
+    font: 600 13px/1 var(--block);
+    letter-spacing: 0.16em;
     text-transform: uppercase;
 }
-.button:hover { color: #ffefd7; }
-.button:hover .menuButtonLabel { color: #7cbc1d; transition-duration: 0.1s; }
-.button:active .menuButtonLabel { color: #5fe69e; transform: scale(0.95); }
-.button:focus-visible { outline-offset: 6px; }
+
+.button:hover, .button:focus-visible { color: rgba(255, 239, 215, 0.93); }
+.button:hover .buttonContent::before,
+.button:focus-visible .buttonContent::before {
+    background-color: var(--off-white);
+    opacity: 1;
+    -webkit-mask-image: url("game/play_box_fill.webp");
+    mask-image: url("game/play_box_fill.webp");
+    transform: rotate(-3deg);
+}
+.button:hover .SplitLabel,
+.button:focus-visible .SplitLabel { color: var(--off-black); font-style: italic; }
+.button:hover .btn_fx, .button:focus-visible .btn_fx { opacity: 1; }
+.button:hover .SplitLabel span:nth-child(1) { transform: rotate(-10deg); }
+.button:hover .SplitLabel span:first-child { transform: rotate(-10deg); }
+.button:hover .SplitLabel span:nth-child(even) { transform: translateY(-4px); }
+.button:hover .SplitLabel span:nth-child(odd) { transform: translateY(4px); }
+.button:hover .SplitLabel span:last-child { transform: rotate(6deg); }
+.button:focus-visible { outline: none; }
+.button:focus-visible .buttonContent { outline: 2px solid var(--brand-green); outline-offset: 6px; }
 
 /* Changelog, GameBanana: the menu's InputButton (citadel_base_styles.css). A faint brush-stroke outline
    (button_border, offWhite at 15%) and a speckled label; on hover the outline fades and the stroke fills

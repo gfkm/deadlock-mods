@@ -4,3 +4,6 @@ They are used on this non-commercial fan page only; this repository grants no ri
 Source: the game's panorama images (main_menu, buttons, textures, global), decompiled with
 Source 2 Viewer and converted to web formats (resized, re-encoded; masks moved to the alpha
 channel; the PLAY button outline stripped to its path) by tools/game_assets.py.
+
+play_btn_grn_flame.webm is the hero-select PLAY button's flame, copied unchanged from the game
+install (game/citadel/panorama/videos/pick_screen/).
