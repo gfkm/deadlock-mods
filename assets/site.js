@@ -10,9 +10,14 @@
         return mod.releases && mod.releases.length ? mod.releases[0] : null;
     }
 
+    function assetUrl(repo, release, asset) {
+        return GITHUB + repo + "/releases/download/" + release.tag + "/" + asset.file;
+    }
+
+    // The first file of the newest release, else the mod's external download page, else none.
     function downloadUrl(repo, mod) {
         var r = latest(mod);
-        if (r) return GITHUB + repo + "/releases/download/" + r.tag + "/" + r.asset;
+        if (r) return assetUrl(repo, r, r.assets[0]);
         return (mod.links && mod.links.download) || null;
     }
 
@@ -68,9 +73,15 @@
 
         var actions = body.appendChild(make(doc, "div", "actions"));
         var dl = downloadUrl(repo, mod);
-        if (dl) {
-            var label = r ? "Download .vpk (" + formatSize(r.size) + ")" : "Download on GameBanana";
-            actions.appendChild(link(doc, dl, "button download", label));
+        if (r) {
+            for (var k = 0; k < r.assets.length; k++) {
+                var a = r.assets[k];
+                var what = a.label ? "Download " + a.label : "Download .vpk";
+                actions.appendChild(link(doc, assetUrl(repo, r, a), "button download",
+                    what + " (" + formatSize(a.size) + ")"));
+            }
+        } else if (dl) {
+            actions.appendChild(link(doc, dl, "button download", "Download on GameBanana"));
         } else {
             actions.appendChild(make(doc, "span", "pending", "Not released yet"));
         }
@@ -94,7 +105,12 @@
         ai.appendChild(make(doc, "strong", "", "AI disclosure. "));
         ai.appendChild(make(doc, "span", "", mod.disclosure));
 
-        if (r) body.appendChild(make(doc, "p", "hash", "SHA-256 " + r.sha256));
+        if (r) {
+            for (var h = 0; h < r.assets.length; h++) {
+                var f = r.assets[h];
+                body.appendChild(make(doc, "p", "hash", "SHA-256" + (f.label ? " " + f.label : "") + " " + f.sha256));
+            }
+        }
         return art;
     }
 
