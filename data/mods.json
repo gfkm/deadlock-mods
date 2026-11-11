@@ -1,0 +1,49 @@
+{
+  "repo": "gfkm/deadlock-mods",
+  "mods": [
+    {
+      "id": "bettertopbar",
+      "name": "BetterTopBar",
+      "summary": "The top bar in the game's own style, with the timers the game does not show: bridge power-up, Rift and Soul Urn, rejuvenator time for both teams, the mid-boss respawn during a rejuvenator, the souls lead and hero health percent.",
+      "image": null,
+      "imageAlt": "BetterTopBar in a match",
+      "disclosure": "Made with AI. The code, the docs and this text were written mostly by an AI coding agent (Anthropic's Claude, in Claude Code). gfkm sets the direction, reviews the work and tests every release in the game.",
+      "knownIssues": [
+        "Hero Health Percent may not show: in testing the percent was computed but the labels did not appear. Under investigation.",
+        "Designed to run alongside BetterMap and Map Event Reminders, but not yet tested together in a match.",
+        "Rift and Soul Urn times are estimates (marked ~) until the game publishes them."
+      ],
+      "links": {},
+      "releases": []
+    },
+    {
+      "id": "bettermap",
+      "name": "BetterMap",
+      "summary": "A points-of-interest overlay and customization layer for the minimap: crate, statue, tough-crate and healing-apple markers in colours you choose, icon sizes, map size and position, a larger map on TAB, a rotating minimap and an urn spawn tracker, set up in the game's own settings window.",
+      "image": null,
+      "imageAlt": "BetterMap on the minimap",
+      "disclosure": "Made with AI. The code, the docs and this text were written mostly by an AI coding agent (Anthropic's Claude, in Claude Code). gfkm sets the direction, reviews the work and tests every release in the game.",
+      "knownIssues": [],
+      "links": {},
+      "releases": []
+    },
+    {
+      "id": "bettermap-camp-icons",
+      "name": "BetterMap Camp Icons",
+      "summary": "New minimap icons for the creep camps and Sinner's Sacrifice: a deep jade triangle with tier bars and an amber Sinner's Sacrifice, in two versions (Classic and Slot Machine). Works with or without BetterMap.",
+      "image": "images/bettermap-camp-icons/cover.jpg",
+      "imageAlt": "The camp icons on the minimap",
+      "disclosure": "The icon art was generated with AI image tools (OpenAI Codex, ChatGPT) to gfkm's directions; gfkm chose, fitted and tested it in the game.",
+      "knownIssues": [],
+      "links": {
+        "gamebanana": "https://gamebanana.com/mods/738726",
+        "download": "https://gamebanana.com/mods/738726"
+      },
+      "hosted": {
+        "label": "Classic and Slot Machine",
+        "date": "2026-11-10"
+      },
+      "releases": []
+    }
+  ]
+}

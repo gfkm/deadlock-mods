@@ -1,0 +1,142 @@
+/* Colours follow Deadlock's HUD (BetterTopBar's research of Valve's sheets): the near-black surfaces, the
+   tooltip brown-black, the cream text of the painted titles, the amber of the clock's low-time pulse.
+   Valve's fonts are not redistributed: system fonts only. */
+:root {
+    --bg: #0b0d0d;
+    --surface: #181716;
+    --surface-2: #211f1d;
+    --line: rgba(255, 255, 255, 0.08);
+    --text: #efe6d2;
+    --muted: #a8a093;
+    --accent: #ebc934;
+    --accent-ink: #1b1607;
+    --warn: #ff8a5c;
+    --radius: 8px;
+    --gutter: 16px;
+    color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.55 system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+a { color: var(--accent); }
+a:focus-visible, .button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+code {
+    font: 0.9em ui-monospace, "Cascadia Mono", Consolas, monospace;
+    background: var(--surface-2);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+}
+
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 var(--gutter); }
+
+.top {
+    padding: 56px 0 32px;
+    background: linear-gradient(180deg, #151312 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--line);
+}
+.kicker {
+    margin: 0 0 8px;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+h1 {
+    margin: 0 0 12px;
+    font-size: clamp(32px, 6vw, 56px);
+    line-height: 1.05;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+}
+.lead { margin: 0; max-width: 62ch; color: var(--muted); }
+
+#mods { padding: 32px 0 8px; }
+.loading, .error { color: var(--muted); }
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    gap: 20px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+.shot { aspect-ratio: 16 / 9; background: #000; }
+.shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.shot-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 14px;
+    background: repeating-linear-gradient(135deg, #141312 0 12px, #181716 12px 24px);
+}
+
+.body { display: flex; flex-direction: column; gap: 10px; padding: 18px 18px 20px; flex: 1; }
+.name { margin: 0; font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; }
+.meta { margin: -6px 0 0; color: var(--accent); font-size: 14px; font-weight: 600; }
+.summary { margin: 0; color: var(--text); }
+
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 4px; }
+.button {
+    display: inline-block;
+    padding: 9px 16px;
+    border-radius: 6px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 800;
+    text-decoration: none;
+}
+.button:hover { filter: brightness(1.08); }
+.textlink { font-weight: 600; }
+.pending {
+    padding: 8px 14px;
+    border: 1px dashed var(--line);
+    border-radius: 6px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.issues {
+    padding: 10px 12px;
+    border-left: 3px solid var(--warn);
+    background: rgba(255, 138, 92, 0.06);
+    border-radius: 0 6px 6px 0;
+}
+.issues h3 { margin: 0 0 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--warn); }
+.issues ul { margin: 0; padding-left: 18px; font-size: 14px; }
+
+.disclosure { margin: auto 0 0; padding-top: 8px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
+.disclosure strong { color: var(--text); }
+.hash { margin: 0; color: var(--muted); font: 11px ui-monospace, Consolas, monospace; overflow-wrap: anywhere; }
+
+.info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 20px;
+    padding: 24px 0 8px;
+}
+.info h2 { margin: 0 0 6px; font-size: 16px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); }
+.info p { margin: 0; color: var(--muted); }
+
+.foot { padding-top: 24px; padding-bottom: 40px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); margin-top: 24px; }
