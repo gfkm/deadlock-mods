@@ -13,7 +13,9 @@
         "Designed to run alongside BetterMap and Map Event Reminders, but not yet tested together in a match.",
         "Rift and Soul Urn times are estimates (marked ~) until the game publishes them."
       ],
-      "links": {},
+      "links": {
+        "source": "https://github.com/gfkm/BetterTopBar"
+      },
       "releases": []
     },
     {
